@@ -17,6 +17,8 @@
                 .attr("y", function (d) { return d.y; })
                 .attr("width", function (d) { return d.width; })
                 .attr("height", function (d) { return d.height; })
+                .append("text", function (d) { return d.text; })
+                .text()
         });
     </script>
 </body>
