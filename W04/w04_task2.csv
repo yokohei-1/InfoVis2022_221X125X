@@ -1,4 +1,4 @@
-x,y,width,height,text
-10,10,100,20,Label1
-10,40,50,20,Label2
-10,70,80,20,Label3
+x,y,width,height,color,text
+10,10,100,20,red,Label1
+10,40,50,20,blue,Label2
+10,70,80,20,green,Label3
