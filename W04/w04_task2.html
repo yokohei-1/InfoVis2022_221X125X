@@ -18,6 +18,8 @@
                 .attr("y", function (d) { return d.y; })
                 .text(function (d) { return d.text; })
             svg.selectAll("rect")
+                .data(data)
+                .enter()
                 .append("rect")
                 .attr("x", x1)
                 .attr("y", function (d) { return d.y; })
