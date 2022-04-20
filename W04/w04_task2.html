@@ -8,14 +8,14 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
         var svg = d3.select("body").append("svg");
-        var x1 = 40;
+        var x1 = 70;
         d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W04/w04_task2.csv", function (data) {
             svg.selectAll("rect")
                 .data(data)
                 .enter()
                 .append("text")
                 .attr("x", function (d) { return d.x; })
-                .attr("y", function (d) { return d.y; })
+                .attr("y", function (d) { return d.ty; })
                 .text(function (d) { return d.text; })
             svg.selectAll("rect")
                 .data(data)
