@@ -11,12 +11,12 @@
         var x1 = 40;
         d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W04/w04_task2.csv", function (data) {
             svg.selectAll("rect")
+                .data(data)
+                .enter()
                 .append("text")
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .text(function (d) { return d.text; })
-                .data(data)
-                .enter()
                 .append("rect")
                 .attr("x", x1)
                 .attr("y", function (d) { return d.y; })
