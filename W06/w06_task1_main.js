@@ -37,7 +37,7 @@ function ShowScatterPlot(data) {
         .call(xaxis);
 
     svg.append('g')
-        .attr('transform', `translate(-5, 0)`)
+        .attr('transform', `translate(-20, 0)`)
         .call(yaxis);
 
     svg.selectAll("circle")
