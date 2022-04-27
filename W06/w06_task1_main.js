@@ -1,50 +1,86 @@
 d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W04/data.csv")
     .then(data => {
-        // Convert strings to numbers
         data.forEach(d => { d.x = +d.x; d.y = +d.y; });
-        ShowScatterPlot(data);
+
+        var config = {
+            parent: '#drawing_region',
+            width: 256,
+            height: 256,
+            margin: { top: 10, right: 10, bottom: 20, left: 10 }
+        };
+
+        const scatter_plot = new ScatterPlot(config, data);
+        scatter_plot.update();
     })
     .catch(error => {
         console.log(error);
     });
 
-function ShowScatterPlot(data) {
-    const width = 256;
-    const height = 256;
-    const margin = { top: 10, right: 10, bottom: 20, left: 10 };
-    var svg = d3.select("body").append("svg")
-        .attr('width', width)
-        .attr('height', height)
-        .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+class ScatterPlot {
 
-    var xscale = d3.scaleLinear()
-        .domain([d3.min(data, d => d.x), d3.max(data, d => d.x)])
-        .range([0, width - margin.left - margin.right]);
+    constructor(config, data) {
+        this.config = {
+            parent: config.parent,
+            width: config.width || 256,
+            height: config.height || 256,
+            margin: config.margin || { top: 10, right: 10, bottom: 10, left: 10 }
+        }
+        this.data = data;
+        this.init();
+    }
 
-    var yscale = d3.scaleLinear()
-        .domain([d3.min(data, d => d.y), d3.max(data, d => d.y)])
-        .range([0, height - margin.top - margin.bottom]);
+    init() {
+        let self = this;
 
-    var xaxis = d3.axisBottom(xscale)
-        .ticks(6);
+        self.svg = d3.select(self.config.parent)
+            .attr('width', self.config.width)
+            .attr('height', self.config.height);
 
-    var yaxis = d3.axisLeft(yscale)
-        .ticks(6);
+        self.chart = self.svg.append('g')
+            .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
 
-    svg.append('g')
-        .attr('transform', `translate(0, ${height - margin.top - margin.bottom})`)
-        .call(xaxis);
+        self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
+        self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-    svg.append('g')
-        .attr('transform', `translate(${- margin.left}, 0)`)
-        .call(yaxis);
+        self.xscale = d3.scaleLinear()
+            .range([0, self.inner_width]);
 
-    svg.selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("cx", d => xscale(d.x))
-        .attr("cy", d => yscale(d.y))
-        .attr("r", d => d.r);
-};
+        self.yscale = d3.scaleLinear()
+            .range([0, self.inner_height]);
+
+        self.xaxis = d3.axisBottom(self.xscale)
+            .ticks(6);
+
+        self.xaxis_group = self.chart.append('g')
+            .attr('transform', `translate(0, ${-1 * self.inner_height})`);
+    }
+
+    update() {
+        let self = this;
+
+        const xmin = d3.min(self.data, d => d.x);
+        const xmax = d3.max(self.data, d => d.x);
+        self.xscale.domain([xmin, xmax]);
+
+        const ymin = d3.min(self.data, d => d.y);
+        const ymax = d3.max(self.data, d => d.y);
+        self.yscale.domain([ymin, ymax]);
+
+        self.render();
+    }
+
+    render() {
+        let self = this;
+
+        self.chart.selectAll("circle")
+            .data(self.data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => self.xscale(d.x))
+            .attr("cy", d => self.yscale(d.y))
+            .attr("r", d => d.r);
+
+        self.xaxis_group
+            .call(self.xaxis);
+    }
+}
