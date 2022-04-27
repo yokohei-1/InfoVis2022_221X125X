@@ -29,7 +29,7 @@ function ShowScatterPlot(data) {
     var xaxis = d3.axisBottom(xscale)
         .ticks(6);
 
-    var yaxis = d3.axisRight(yscale)
+    var yaxis = d3.axisLeft(yscale)
         .ticks(6);
 
     svg.append('g')
@@ -37,7 +37,7 @@ function ShowScatterPlot(data) {
         .call(xaxis);
 
     svg.append('g')
-        .attr('transform', `translate(${width - margin.left - margin.right}, 0)`)
+        .attr('transform', `translate(0, 0)`)
         .call(yaxis);
 
     svg.selectAll("circle")
