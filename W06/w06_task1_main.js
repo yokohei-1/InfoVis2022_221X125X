@@ -29,7 +29,7 @@ function ShowScatterPlot(data) {
     var xaxis = d3.axisBottom(xscale)
         .ticks(6);
 
-    var yaxis = d3.axisBottom(yscale)
+    var yaxis = d3.axisLeft(yscale)
         .ticks(6);
 
     svg.append('g')
