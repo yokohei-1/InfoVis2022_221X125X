@@ -6,7 +6,7 @@ d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W04/data.csv")
             parent: '#drawing_region',
             width: 256,
             height: 256,
-            margin: { top: 10, right: 40, bottom: 40, left: 40 }
+            margin: { top: 40, right: 40, bottom: 40, left: 40 }
         };
 
         const scatter_plot = new ScatterPlot(config, data);
@@ -23,7 +23,7 @@ class ScatterPlot {
             parent: config.parent,
             width: config.width || 256,
             height: config.height || 256,
-            margin: config.margin || { top: 10, right: 10, bottom: 10, left: 20 }
+            margin: config.margin || { top: 10, right: 10, bottom: 10, left: 10 }
         }
         this.data = data;
         this.init();
@@ -49,16 +49,35 @@ class ScatterPlot {
             .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(6);
+            .ticks(10);
 
         self.xaxis_group = self.chart.append('g')
-            .attr('transform', `translate(15, ${self.inner_height + 10})`);
+            .attr('transform', `translate(15, ${self.inner_height + 5})`);
+
+        self.xaxis_title = self.chart.append('g')
+            .append("text")
+            .attr("x", 80)
+            .attr("y", 215)
+            .text("X軸");
 
         self.yaxis = d3.axisLeft(self.yscale)
-            .ticks(6);
+            .ticks(10);
 
         self.yaxis_group = self.chart.append('g')
-            .attr('transform', `translate(15, 10)`);
+            .attr('transform', `translate(15, 5)`);
+
+        self.yaxis_title = self.chart.append('g')
+            .append("text")
+            .attr("x", -120)
+            .attr("y", -10)
+            .text("Y軸")
+            .attr("transform", "rotate(-90)");
+
+        self.gragh_title = self.chart.append('g')
+            .append("text")
+            .attr("x", 50)
+            .attr("y", -10)
+            .text("グラフのタイトル");
     }
 
     update() {
@@ -88,17 +107,10 @@ class ScatterPlot {
             .attr('transform', `translate(20, -5)`);;
 
         self.xaxis_group
-            .call(self.xaxis);
+            .call(self.xaxis)
 
         self.yaxis_group
             .call(self.yaxis);
 
-        self.chart.selectAll("circle")
-            .data(self.data)
-            .enter()
-            .append("text") // テキスト要素追加
-            .attr("x", 10)
-            .attr("y", 20)
-            .text('お試し') //
     }
 }
