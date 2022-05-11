@@ -91,7 +91,7 @@ class ScatterPlot {
             .data(self.data)
             .enter()
             .append("path")
-            .attr('d', line(data))
+            .attr('d', line(self.data))
             .attr('stroke', 'black')
             .attr('fill', 'none');
 
