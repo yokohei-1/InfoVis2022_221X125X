@@ -1,6 +1,6 @@
 d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
     .then(data => {
-        data.forEach(d => { d.label = +d.label; d.value = +d.value; });
+        data.forEach(d => { d.x = +d.x; d.y = +d.y; });
 
         var config = {
             parent: '#drawing_region',
