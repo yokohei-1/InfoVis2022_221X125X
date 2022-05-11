@@ -71,8 +71,6 @@ class ScatterPlot {
 
         self.xaxis.tickSizeOuter(0);
 
-        //const ymap = d3.map(self.data, d => d.label);
-        //self.yscale.domain(ymap);
         self.yscale.paddingInner(0.1);
 
         self.render();
