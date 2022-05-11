@@ -87,10 +87,9 @@ class ScatterPlot {
         self.yaxis_group
             .call(self.yaxis);
 
-        self.chart.selectAll("path")
+        self.svg.append('path')
             .data(self.data)
             .enter()
-            .append("path")
             .attr('d', line(self.data))
             .attr('stroke', 'black')
             .attr('fill', 'none');
