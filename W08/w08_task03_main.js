@@ -58,7 +58,7 @@ class ScatterPlot {
     render() {
         let self = this;
 
-        svg.selectAll('pie')
+        self.svg.selectAll('pie')
             .data(pie(self.data))
             .enter()
             .append('path')
