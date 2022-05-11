@@ -64,9 +64,17 @@ class ScatterPlot {
             .enter()
             .append('path')
             .attr('d', self.arc)
-            .attr('fill', 'black')
+            .attr('fill', 'blue')
             .attr('stroke', 'white')
             .style('stroke-width', '2px');
 
+        svg.selectAll('pie')
+            .data(self.pie(self.data))
+            .enter()
+            .append('text')
+            .text(d => d.data.value) // 表示するテキスト
+            .attr("transform", d => `translate(${arc.centroid(d)})`) // 扇型の中心に移動
+            .style("text-anchor", "middle")
+            .style("font-size", 20);
     }
 }

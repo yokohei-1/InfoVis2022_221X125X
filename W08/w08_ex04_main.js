@@ -36,7 +36,7 @@ svg.selectAll('pie')
     .data(pie(data))
     .enter()
     .append('text')
-    .text(d => d.label) // 表示するテキスト
+    .text(d => d.data.label) // 表示するテキスト
     .attr("transform", d => `translate(${arc.centroid(d)})`) // 扇型の中心に移動
     .style("text-anchor", "middle")
     .style("font-size", 20);
