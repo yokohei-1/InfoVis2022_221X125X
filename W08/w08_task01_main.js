@@ -46,12 +46,10 @@ class ScatterPlot {
             .range([0, self.inner_width]);
 
         self.yscale = d3.scaleLinear()
-            .range([0, self.inner_height])
-            .paddingInner(0.1);
+            .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(5)
-            .tickSizeOuter(0);
+            .ticks(5);
 
         self.xaxis_group = self.chart.append('g')
             .attr('transform', `translate(0, ${self.inner_height})`);
@@ -70,8 +68,11 @@ class ScatterPlot {
         const xmax = d3.max(self.data, d => d.value);
         self.xscale.domain([0, xmax]);
 
+        self.xaxis.tickSizeOuter(0);
+
         const ymap = d3.map(self.data, d => d.label);
         self.yscale.domain(ymap);
+        self.yscale.paddingInner(0.1);
 
         self.render();
     }
