@@ -1,4 +1,4 @@
-d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
+d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task2_data.csv")
     .then(data => {
         data.forEach(d => { d.x = +d.x; d.y = +d.y; });
 
@@ -6,7 +6,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
             parent: '#drawing_region',
             width: 256,
             height: 128,
-            //margin: { top: 10, right: 10, bottom: 20, left: 60 }
+            margin: { top: 10, right: 10, bottom: 20, left: 60 }
         };
 
         const scatter_plot = new ScatterPlot(config, data);
@@ -23,7 +23,7 @@ class ScatterPlot {
             parent: config.parent,
             width: config.width || 256,
             height: config.height || 128,
-            //margin: config.margin || { top: 10, right: 10, bottom: 10, left: 10 }
+            margin: config.margin || { top: 10, right: 10, bottom: 10, left: 10 }
         }
         this.data = data;
         this.init();
@@ -37,20 +37,19 @@ class ScatterPlot {
             .attr('height', self.config.height);
 
         self.line = d3.line()
-            .x(d => d.x)
-            .y(d => d.y);
+            .x(self.data, d => d.x)
+            .y(self.data, d => d.y);
 
-        /*self.chart = self.svg.append('g')
-            .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);*/
+        self.chart = self.svg.append('g')
+            .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
 
-        //self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
-        //self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
+        self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
+        self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-        /*self.xscale = d3.scaleLinear()
+        self.xscale = d3.scaleLinear()
             .range([0, self.inner_width]);
 
-        self.yscale = d3.scaleBand()
-            .domain(self.data.map(d => d.label))
+        self.yscale = d3.scaleLinear()
             .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
@@ -62,20 +61,19 @@ class ScatterPlot {
         self.yaxis = d3.axisLeft(self.yscale)
             .tickSizeOuter(0);
 
-        self.yaxis_group = self.chart.append('g');*/
-        //.attr('transform', `translate(10, 10)`);
+        self.yaxis_group = self.chart.append('g');
     }
 
     update() {
         let self = this;
 
-        /*const xmin = d3.min(self.data, d => d.value);
-        const xmax = d3.max(self.data, d => d.value);
+        const xmin = d3.min(self.data, d => d.x);
+        const xmax = d3.max(self.data, d => d.x);
         self.xscale.domain([0, xmax]);
 
-        self.xaxis.tickSizeOuter(0);
-
-        self.yscale.paddingInner(0.1);*/
+        const ymin = d3.min(self.data, d => d.y);
+        const ymax = d3.max(self.data, d => d.y);
+        self.xscale.domain([0, ymax]);
 
         self.render();
     }
@@ -83,11 +81,11 @@ class ScatterPlot {
     render() {
         let self = this;
 
-        /*self.xaxis_group
+        self.xaxis_group
             .call(self.xaxis);
 
         self.yaxis_group
-            .call(self.yaxis);*/
+            .call(self.yaxis);
 
         self.chart.selectAll("path")
             .data(self.data)
