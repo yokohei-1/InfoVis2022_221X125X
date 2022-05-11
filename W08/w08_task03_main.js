@@ -68,12 +68,12 @@ class ScatterPlot {
             .attr('stroke', 'white')
             .style('stroke-width', '2px');
 
-        svg.selectAll('pie')
+        self.svg.selectAll('pie')
             .data(self.pie(self.data))
             .enter()
             .append('text')
-            .text(d => d.data.value) // 表示するテキスト
-            .attr("transform", d => `translate(${arc.centroid(d)})`) // 扇型の中心に移動
+            .text(d => d.data.label) // 表示するテキスト
+            .attr("transform", d => `translate(${self.arc.centroid(d)})`) // 扇型の中心に移動
             .style("text-anchor", "middle")
             .style("font-size", 20);
     }
