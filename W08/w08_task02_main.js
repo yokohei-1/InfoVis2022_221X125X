@@ -37,8 +37,8 @@ class ScatterPlot {
             .attr('height', self.config.height);
 
         self.line = d3.line()
-            .x(self.data, d => d.x)
-            .y(self.data, d => d.y);
+            .x(d => d.x)
+            .y(d => d.y);
 
         self.chart = self.svg.append('g')
             .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
