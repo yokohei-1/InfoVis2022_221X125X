@@ -1,6 +1,6 @@
-d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W04/data.csv")
+d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
     .then(data => {
-        data.forEach(d => { d.x = +d.x; d.y = +d.y; });
+        data.forEach(d => { d.label = +d.label; d.value = +d.value; });
 
         var config = {
             parent: '#drawing_region',
@@ -66,11 +66,11 @@ class ScatterPlot {
     update() {
         let self = this;
 
-        const xmin = d3.min(self.data, d => d.x);
-        const xmax = d3.max(self.data, d => d.x);
+        const xmin = d3.min(self.data, d => d.value);
+        const xmax = d3.max(self.data, d => d.value);
         self.xscale.domain([0, xmax]);
 
-        const ymap = d3.map(self.data, d => d.text);
+        const ymap = d3.map(self.data, d => d.label);
         self.yscale.domain(ymap);
 
         self.render();
@@ -84,9 +84,9 @@ class ScatterPlot {
             .enter()
             .append("rect")
             .attr("x", 0)
-            .attr("y", d => self.yscale(d.text))
-            .attr("width", d => xscale(d.x))
-            .attr("height", yscale.bandwidth());
+            .attr("y", d => self.yscale(d.label))
+            .attr("width", d => self.xscale(d.value))
+            .attr("height", self.yscale.bandwidth());
 
         self.xaxis_group
             .call(self.xaxis);
