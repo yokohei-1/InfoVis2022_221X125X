@@ -1,50 +1,97 @@
-d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W04/data.csv", function (data) {
-    var width = 256;
-    var height = 128;
-    var margin = { top: 10, right: 10, bottom: 20, left: 60 };
+d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W04/data.csv")
+    .then(data => {
+        data.forEach(d => { d.x = +d.x; d.y = +d.y; });
 
-    var svg = d3.select('#drawing_region')
-        .attr('width', width)
-        .attr('height', height);
+        var config = {
+            parent: '#drawing_region',
+            width: 256,
+            height: 128,
+            margin: { top: 10, right: 10, bottom: 20, left: 60 }
+        };
 
-    var chart = svg.append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+        const scatter_plot = new ScatterPlot(config, data);
+        scatter_plot.update();
+    })
+    .catch(error => {
+        console.log(error);
+    });
 
-    const inner_width = width - margin.left - margin.right;
-    const inner_height = height - margin.top - margin.bottom;
+class ScatterPlot {
 
-    // Initialize axis scales
-    const xscale = d3.scaleLinear()
-        .domain([0, d3.max(10)])
-        .range([0, inner_width]);
+    constructor(config, data) {
+        this.config = {
+            parent: config.parent,
+            width: config.width || 256,
+            height: config.height || 128,
+            margin: config.margin || { top: 10, right: 10, bottom: 10, left: 10 }
+        }
+        this.data = data;
+        this.init();
+    }
 
-    const yscale = d3.scaleBand()
-        .domain(data.map(function (d) { return d.text; }))
-        .range([0, inner_height])
-        .paddingInner(0.1);
+    init() {
+        let self = this;
 
-    // Initialize axes
-    const xaxis = d3.axisBottom(xscale)
-        .ticks(5)
-        .tickSizeOuter(0);
+        self.svg = d3.select(self.config.parent)
+            .attr('width', self.config.width)
+            .attr('height', self.config.height);
 
-    const yaxis = d3.axisLeft(yscale)
-        .tickSizeOuter(0);
+        self.chart = self.svg.append('g')
+            .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
 
-    // Draw the axis
-    const xaxis_group = chart.append('g')
-        .attr('transform', `translate(0, ${inner_height})`)
-        .call(xaxis);
+        self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
+        self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-    const yaxis_group = chart.append('g')
-        .call(yaxis);
+        self.xscale = d3.scaleLinear()
+            .range([0, self.inner_width]);
 
-    // Draw bars
-    chart.selectAll("rect").data(data).enter()
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", d => yscale(function (d) { return d.text; }))
-        .attr("width", d => xscale(function (d) { return d.x; }))
-        .attr("height", yscale.bandwidth());
+        self.yscale = d3.scaleLinear()
+            .range([0, self.inner_height])
+            .paddingInner(0.1);
 
-});
+        self.xaxis = d3.axisBottom(self.xscale)
+            .ticks(5)
+            .tickSizeOuter(0);
+
+        self.xaxis_group = self.chart.append('g')
+            .attr('transform', `translate(0, ${self.inner_height})`);
+
+        self.yaxis = d3.axisLeft(self.yscale)
+            .tickSizeOuter(0);
+
+        self.yaxis_group = self.chart.append('g');
+        //.attr('transform', `translate(10, 10)`);
+    }
+
+    update() {
+        let self = this;
+
+        const xmin = d3.min(self.data, d => d.x);
+        const xmax = d3.max(self.data, d => d.x);
+        self.xscale.domain([0, xmax]);
+
+        const ymap = d3.map(self.data, d => d.text);
+        self.yscale.domain(ymap);
+
+        self.render();
+    }
+
+    render() {
+        let self = this;
+
+        self.chart.selectAll("rect")
+            .data(self.data)
+            .enter()
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", d => self.yscale(d.text))
+            .attr("width", d => xscale(d.x))
+            .attr("height", yscale.bandwidth());
+
+        self.xaxis_group
+            .call(self.xaxis);
+
+        self.yaxis_group
+            .call(self.yaxis);
+    }
+}
