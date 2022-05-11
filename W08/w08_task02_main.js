@@ -36,9 +36,10 @@ class ScatterPlot {
             .attr('width', self.config.width)
             .attr('height', self.config.height);
 
-        self.line = d3.line()
+        self.area = d3.area()
             .x(d => d.x)
-            .y(d => d.y);
+            .y1(d => d.y)
+            .y0(d3.max(self.data, d => d.y) + 10);
 
         self.chart = self.svg.append('g')
             .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
@@ -88,11 +89,10 @@ class ScatterPlot {
             .call(self.yaxis);
 
         self.svg.append('path')
-            .data(self.data)
-            .enter()
-            .attr('d', self.line(self.data))
+            .attr('d', self.area(self.data))
             .attr('stroke', 'black')
-            .attr('fill', 'none');
+            .attr('fill', 'blue')
+            .attr('transform', `translate(60, 0)`);
 
     }
 }
