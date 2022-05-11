@@ -28,6 +28,15 @@ svg.selectAll('pie')
     .enter()
     .append('path')
     .attr('d', arc)
-    .attr('fill', 'black')
+    .attr('fill', 'blue')
     .attr('stroke', 'white')
     .style('stroke-width', '2px');
+
+svg.selectAll('pie')
+    .data(pie(data))
+    .enter()
+    .append('text')
+    .text(d => d.label) // 表示するテキスト
+    .attr("transform", d => `translate(${arc.centroid(d)})`) // 扇型の中心に移動
+    .style("text-anchor", "middle")
+    .style("font-size", 20);

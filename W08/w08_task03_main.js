@@ -41,10 +41,11 @@ class ScatterPlot {
             .attr('transform', `translate(${self.config.width / 2}, ${self.config.height / 2})`);
 
         self.pie = d3.pie()
-            .value(d => d.value)
+            .value(d => d.value);
 
         self.arc = d3.arc()
             .innerRadius(0);
+
     }
 
     update() {
@@ -59,19 +60,13 @@ class ScatterPlot {
         let self = this;
 
         self.svg.selectAll('pie')
-            .data(pie(self.data))
+            .data(self.pie(self.data))
             .enter()
             .append('path')
             .attr('d', self.arc)
             .attr('fill', 'black')
             .attr('stroke', 'white')
             .style('stroke-width', '2px');
-
-        /*self.svg.append('path')
-            .attr('d', self.area(self.data))
-            .attr('stroke', 'black')
-            .attr('fill', 'blue')
-            .attr('transform', `translate(60, 0)`);*/
 
     }
 }
