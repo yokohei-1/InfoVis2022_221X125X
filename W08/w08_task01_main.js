@@ -46,6 +46,7 @@ class ScatterPlot {
             .range([0, self.inner_width]);
 
         self.yscale = d3.scaleBand()
+            .domain(self.data.map(d => d.label))
             .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
@@ -70,8 +71,8 @@ class ScatterPlot {
 
         self.xaxis.tickSizeOuter(0);
 
-        const ymap = d3.map(self.data, d => d.label);
-        self.yscale.domain(ymap);
+        //const ymap = d3.map(self.data, d => d.label);
+        //self.yscale.domain(ymap);
         self.yscale.paddingInner(0.1);
 
         self.render();
@@ -79,6 +80,12 @@ class ScatterPlot {
 
     render() {
         let self = this;
+
+        self.xaxis_group
+            .call(self.xaxis);
+
+        self.yaxis_group
+            .call(self.yaxis);
 
         self.chart.selectAll("rect")
             .data(self.data)
@@ -89,10 +96,5 @@ class ScatterPlot {
             .attr("width", d => self.xscale(d.value))
             .attr("height", self.yscale.bandwidth());
 
-        self.xaxis_group
-            .call(self.xaxis);
-
-        self.yaxis_group
-            .call(self.yaxis);
     }
 }
