@@ -90,7 +90,7 @@ class ScatterPlot {
         self.svg.append('path')
             .data(self.data)
             .enter()
-            .attr('d', line(self.data))
+            .attr('d', self.line(self.data))
             .attr('stroke', 'black')
             .attr('fill', 'none');
 
