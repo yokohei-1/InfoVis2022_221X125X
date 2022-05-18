@@ -11,23 +11,6 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W04/data.csv")
 
         const scatter_plot = new ScatterPlot(config, data);
         scatter_plot.update();
-        //let circles = document.getElementById('10');
-        $('#1')
-            .on('mouseover', (e, d) => {
-                d3.select('#tooltip')
-                    .style('opacity', 1)
-                    .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
-            })
-            .on('mousemove', (e) => {
-                const padding = 10;
-                d3.select('#tooltip')
-                    .style('left', (e.pageX + padding) + 'px')
-                    .style('top', (e.pageY + padding) + 'px');
-            })
-            .on('mouseleave', () => {
-                d3.select('#tooltip')
-                    .style('opacity', 0);
-            });
     })
     .catch(error => {
         console.log(error);
@@ -123,6 +106,23 @@ class ScatterPlot {
             .attr("r", d => d.r)
             .attr("id", d => d.id)
             .attr('transform', `translate(20, -5)`);
+
+        self.chart.selectAll("circle")
+            .on('mouseover', (e, d) => {
+                d3.select('#tooltip')
+                    .style('opacity', 1)
+                    .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
+            })
+            .on('mousemove', (e) => {
+                const padding = 10;
+                d3.select('#tooltip')
+                    .style('left', (e.pageX + padding) + 'px')
+                    .style('top', (e.pageY + padding) + 'px');
+            })
+            .on('mouseleave', () => {
+                d3.select('#tooltip')
+                    .style('opacity', 0);
+            });
 
         self.xaxis_group
             .call(self.xaxis)
