@@ -14,12 +14,34 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
         d3.select('#reverse')
             .on('click', d => {
                 data.reverse();
-                scatter_plot = new ScatterPlot(config, data);
-                //scatter_plot.delete();
                 let node = document.getElementById('drawing_region');
                 while (node.firstChild) {
                     node.removeChild(node.firstChild);
                 }
+                scatter_plot = new ScatterPlot(config, data);
+                //scatter_plot.delete();
+                scatter_plot.update();
+            });
+        d3.select('#desc')
+            .on('click', d => {
+                data.sort(function (a, b) { return (b['value'] - a['value']); });
+                let node = document.getElementById('drawing_region');
+                while (node.firstChild) {
+                    node.removeChild(node.firstChild);
+                }
+                scatter_plot = new ScatterPlot(config, data);
+                //scatter_plot.delete();
+                scatter_plot.update();
+            });
+        d3.select('#asc')
+            .on('click', d => {
+                data.sort(function (a, b) { return (a['value'] - b['value']); });
+                let node = document.getElementById('drawing_region');
+                while (node.firstChild) {
+                    node.removeChild(node.firstChild);
+                }
+                scatter_plot = new ScatterPlot(config, data);
+                //scatter_plot.delete();
                 scatter_plot.update();
             });
     })
