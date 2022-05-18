@@ -11,6 +11,23 @@ d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W04/data.csv")
 
         const scatter_plot = new ScatterPlot(config, data);
         scatter_plot.update();
+        let circles = svg.selectAll('circle')
+        circles
+            .on('mouseover', (e, d) => {
+                d3.select('#tooltip')
+                    .style('opacity', 1)
+                    .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
+            })
+            .on('mousemove', (e) => {
+                const padding = 10;
+                d3.select('#tooltip')
+                    .style('left', (e.pageX + padding) + 'px')
+                    .style('top', (e.pageY + padding) + 'px');
+            })
+            .on('mouseleave', () => {
+                d3.select('#tooltip')
+                    .style('opacity', 0);
+            });
     })
     .catch(error => {
         console.log(error);
@@ -111,23 +128,6 @@ class ScatterPlot {
 
         self.yaxis_group
             .call(self.yaxis);
-
-        self.chart.selectAll("circle")
-            .on('mouseover', (e, d) => {
-                d3.select('#tooltip')
-                    .style('opacity', 1)
-                    .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
-            })
-            .on('mousemove', (e) => {
-                const padding = 10;
-                d3.select('#tooltip')
-                    .style('left', (e.pageX + padding) + 'px')
-                    .style('top', (e.pageY + padding) + 'px');
-            })
-            .on('mouseleave', () => {
-                d3.select('#tooltip')
-                    .style('opacity', 0);
-            });
 
     }
 }
