@@ -12,7 +12,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W04/data.csv")
         const scatter_plot = new ScatterPlot(config, data);
         scatter_plot.update();
         //let circles = document.getElementById('10');
-        document.getElementById('1')
+        $('#1')
             .on('mouseover', (e, d) => {
                 d3.select('#tooltip')
                     .style('opacity', 1)
