@@ -18,7 +18,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
 
 
 class PieChart {
-    const(config, data) {
+    constructor(config, data) {
         this.config = {
             parent: config.parent,
             width: config.width || 256,
