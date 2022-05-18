@@ -9,13 +9,14 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
             margin: { top: 10, right: 10, bottom: 20, left: 60 }
         };
 
-        const scatter_plot = new ScatterPlot(config, data);
+        var scatter_plot = new ScatterPlot(config, data);
         scatter_plot.update();
         d3.select('#reverse')
             .on('click', d => {
                 data.reverse();
-                new ScatterPlot(config, data);
-                scatter_plot.update();
+                scatter_plot = new ScatterPlot(config, data);
+                scatter_plot.delete();
+                //scatter_plot.update();
             });
     })
     .catch(error => {
@@ -100,5 +101,9 @@ class ScatterPlot {
             .attr("width", d => self.xscale(d.value))
             .attr("height", self.yscale.bandwidth());
 
+    }
+    delete() {
+        let self = this;
+        self.chart.selectAll("rect").remove();
     }
 }
