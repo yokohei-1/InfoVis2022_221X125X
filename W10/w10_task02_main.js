@@ -121,7 +121,7 @@ class ScatterPlot {
             .attr("cx", d => self.xscale(d.x))
             .attr("cy", d => self.yscale(d.y))
             .attr("r", d => d.r)
-            .attr("id", d => d.r)
+            .attr("id", d => d.id)
             .attr('transform', `translate(20, -5)`);
 
         self.xaxis_group
