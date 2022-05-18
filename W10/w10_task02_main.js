@@ -11,7 +11,7 @@ d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W04/data.csv")
 
         const scatter_plot = new ScatterPlot(config, data);
         scatter_plot.update();
-        let circles = circle.selectAll('circle')
+        let circles = document.getElementById('10');
         circles
             .on('mouseover', (e, d) => {
                 d3.select('#tooltip')
