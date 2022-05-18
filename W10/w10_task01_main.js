@@ -14,18 +14,9 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/W08/task1_data.csv")
         d3.select('#reverse')
             .on('click', d => {
                 data.reverse();
-                update(data);
+                new ScatterPlot(config, data);
+                scatter_plot.update();
             });
-
-        /*function update(data) {
-            svg.selectAll("rect")
-                .data(data)
-                .join("rect")
-                .attr("x", padding)
-                .attr("y", (d, i) => padding + i * (height + padding))
-                .attr("width", d => d)
-                .attr("height", height);
-        }*/
     })
     .catch(error => {
         console.log(error);
