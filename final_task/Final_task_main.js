@@ -7,8 +7,8 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
     .then(data => {
         input_data = data;
         input_data.forEach(d => {
-            d.age = +d.age;
-            d.year = +d.year;
+            d.age = +d.x;
+            d.year = +d.y;
         });
 
         const color_scale = d3.scaleOrdinal(d3.schemeCategory10);
