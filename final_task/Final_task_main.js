@@ -1,99 +1,50 @@
-d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X/final_task/Final_task_data.csv")
+let input_data;
+let scatter_plot;
+let bar_chart;
+let filter = [];
+
+d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/final_task/Final_task.csv")
     .then(data => {
-        data.forEach(d => { d.x = +d.x; d.y = +d.y; });
+        input_data = data;
+        input_data.forEach(d => {
+            d.age = +d.age;
+            d.year = +d.year;
+        });
 
-        var config = {
-            parent: '#drawing_region',
+        const color_scale = d3.scaleOrdinal(d3.schemeCategory10);
+        color_scale.domain(['setosa', 'versicolor', 'virginica']);
+
+        scatter_plot = new ScatterPlot({
+            parent: '#drawing_region_scatterplot',
             width: 256,
-            height: 128,
-            margin: { top: 10, right: 10, bottom: 20, left: 60 }
-        };
-
-        const scatter_plot = new ScatterPlot(config, data);
+            height: 256,
+            margin: { top: 10, right: 10, bottom: 50, left: 50 },
+            xlabel: 'Sepal length [cm]',
+            ylabel: 'Sepal width [cm]',
+            cscale: color_scale
+        }, input_data);
         scatter_plot.update();
+
+        bar_chart = new BarChart({
+            parent: '#drawing_region_barchart',
+            width: 256,
+            height: 256,
+            margin: { top: 10, right: 10, bottom: 50, left: 50 },
+            xlabel: 'Species',
+            cscale: color_scale
+        }, input_data);
+        bar_chart.update();
     })
     .catch(error => {
         console.log(error);
     });
 
-class ScatterPlot {
-
-    constructor(config, data) {
-        this.config = {
-            parent: config.parent,
-            width: config.width || 256,
-            height: config.height || 128,
-            margin: config.margin || { top: 10, right: 10, bottom: 10, left: 10 }
-        }
-        this.data = data;
-        this.init();
+function Filter() {
+    if (filter.length == 0) {
+        scatter_plot.data = input_data;
     }
-
-    init() {
-        let self = this;
-
-        self.svg = d3.select(self.config.parent)
-            .attr('width', self.config.width)
-            .attr('height', self.config.height);
-
-        self.area = d3.area()
-            .x(d => d.x)
-            .y1(d => d.y)
-            .y0(d3.max(self.data, d => d.y) + 10);
-
-        self.chart = self.svg.append('g')
-            .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
-
-        self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
-        self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
-
-        self.xscale = d3.scaleLinear()
-            .range([0, self.inner_width]);
-
-        self.yscale = d3.scaleLinear()
-            .range([0, self.inner_height]);
-
-        self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(5);
-
-        self.xaxis_group = self.chart.append('g')
-            .attr('transform', `translate(0, ${self.inner_height})`);
-
-        self.yaxis = d3.axisLeft(self.yscale)
-            .tickSizeOuter(0);
-
-        self.yaxis_group = self.chart.append('g');
+    else {
+        scatter_plot.data = input_data.filter(d => filter.includes(d.species));
     }
-
-    update() {
-        let self = this;
-
-        const xmin = d3.min(self.data, d => d.x);
-        const xmax = d3.max(self.data, d => d.x);
-        self.xscale.domain([0, xmax]);
-
-        const ymin = d3.min(self.data, d => d.y);
-        const ymax = d3.max(self.data, d => d.y);
-        self.xscale.domain([0, ymax]);
-
-        self.render();
-    }
-
-    render() {
-        let self = this;
-
-        self.xaxis_group
-            .call(self.xaxis);
-
-        self.yaxis_group
-            .call(self.yaxis);
-
-        self.svg.append('path')
-            .attr('d', self.area(self.data))
-            .attr('stroke', 'black')
-            .attr('fill', 'blue')
-            .attr('transform', `translate(60, 0)`);
-
-    }
+    scatter_plot.update();
 }
-
