@@ -12,7 +12,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
         });
 
         const color_scale = d3.scaleOrdinal(d3.schemeCategory10);
-        color_scale.domain(['setosa', 'versicolor', 'virginica']);
+        color_scale.domain(['全年代', '10代', '20代', '30代', '40代', '50代', '60代']);
 
         scatter_plot = new ScatterPlot({
             parent: '#drawing_region_scatterplot',
@@ -21,7 +21,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
             margin: { top: 10, right: 10, bottom: 50, left: 50 },
             xlabel: 'Sepal length [cm]',
             ylabel: 'Sepal width [cm]',
-            cscale: color_scale
+            //cscale: color_scale
         }, input_data);
         scatter_plot.update();
 
@@ -31,7 +31,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
             height: 256,
             margin: { top: 10, right: 10, bottom: 50, left: 50 },
             xlabel: 'Species',
-            cscale: color_scale
+            //cscale: color_scale
         }, input_data);
         bar_chart.update();
     })

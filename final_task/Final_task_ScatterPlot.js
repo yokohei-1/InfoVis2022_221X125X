@@ -70,9 +70,10 @@ class ScatterPlot {
     update() {
         let self = this;
 
-        self.cvalue = d => d.species;
-        self.xvalue = d => d.sepal_length;
-        self.yvalue = d => d.sepal_width;
+        self.cvalue = d => d.age;
+        self.xvalue = d => d.TV_use;
+        self.yvalue = d => d.net_use;
+        self.year = d => d.year;
 
         const xmin = d3.min(self.data, self.xvalue);
         const xmax = d3.max(self.data, self.xvalue);
@@ -97,8 +98,8 @@ class ScatterPlot {
         circles
             .attr("r", circle_radius)
             .attr("cx", d => self.xscale(self.xvalue(d)))
-            .attr("cy", d => self.yscale(self.yvalue(d)))
-            .attr("fill", d => self.config.cscale(self.cvalue(d)));
+            .attr("cy", d => self.yscale(self.yvalue(d)));
+        //.attr("fill", d => self.config.cscale(self.cvalue(d)));
 
         circles
             .on('mouseover', (e, d) => {
