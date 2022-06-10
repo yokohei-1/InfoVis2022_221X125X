@@ -2,6 +2,8 @@ let input_data;
 let scatter_plot;
 let bar_chart;
 let filter = [];
+const inputSlideBarElement = document.getElementById('inputSlideBar');
+
 
 d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_data.csv")
     .then(data => {
@@ -16,24 +18,6 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
 
         input_data = input_data_new.slice(0, 5);
 
-        inputSlideBarElement.addEventListener('change', function () {
-            if (inputSlideBarElement.value = 0) {
-                input_data = input_data_new.slice(0, 5);
-            } else if (inputSlideBarElement.value = 10) {
-                input_data = input_data_new.slice(5, 10);
-            } else if (inputSlideBarElement.value = 20) {
-                input_data = input_data_new.slice(10, 15);
-            } else if (inputSlideBarElement.value = 30) {
-                input_data = input_data_new.slice(15, 20);
-            } else if (inputSlideBarElement.value = 40) {
-                input_data = input_data_new.slice(20, 25);
-            } else if (inputSlideBarElement.value = 50) {
-                input_data = input_data_new.slice(25, 30);
-            } else if (inputSlideBarElement.value = 60) {
-                input_data = input_data_new.slice(30, 35);
-            }
-        });
-
         scatter_plot = new ScatterPlot({
             parent: '#drawing_region_scatterplot',
             width: 256,
@@ -41,7 +25,6 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
             margin: { top: 10, right: 10, bottom: 50, left: 50 },
             xlabel: '年',
             ylabel: '利用時間 [分]',
-            cscale: color_scale
         }, input_data);
         scatter_plot.update();
 
@@ -68,3 +51,37 @@ function Filter() {
     }
     scatter_plot.update();
 }
+
+inputSlideBarElement.addEventListener('change', function () {
+    if (inputSlideBarElement.value == 0) {
+        input_data = input_data_new.slice(0, 5);
+    } else if (inputSlideBarElement.value == 10) {
+        input_data = input_data_new.slice(5, 10);
+    } else if (inputSlideBarElement.value == 20) {
+        input_data = input_data_new.slice(10, 15);
+    } else if (inputSlideBarElement.value == 30) {
+        input_data = input_data_new.slice(15, 20);
+    } else if (inputSlideBarElement.value == 40) {
+        input_data = input_data_new.slice(20, 25);
+    } else if (inputSlideBarElement.value == 50) {
+        input_data = input_data_new.slice(25, 30);
+    } else if (inputSlideBarElement.value == 60) {
+        input_data = input_data_new.slice(30, 35);
+    }
+
+    let parent = document.getElementById('drawing_region_scatterplot');
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+
+    scatter_plot = new ScatterPlot({
+        parent: '#drawing_region_scatterplot',
+        width: 256,
+        height: 256,
+        margin: { top: 10, right: 10, bottom: 50, left: 50 },
+        xlabel: '年',
+        ylabel: '利用時間 [分]',
+    }, input_data);
+    scatter_plot.update();
+
+});

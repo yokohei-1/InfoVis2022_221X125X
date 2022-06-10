@@ -10,7 +10,6 @@ class ScatterPlot {
             ylabel: config.ylabel || '',
             cscale: config.cscale
         }
-        const inputSlideBarElement = document.getElementById('inputSlideBar');
 
         this.data = data;
         this.init();
@@ -98,7 +97,7 @@ class ScatterPlot {
 
         const ymax = Math.max(ymax1, ymax2);
         const ymin = Math.min(ymin1, ymin2);
-        self.yscale.domain([ymin, ymax + 40]);
+        self.yscale.domain([0, 300]);
 
         self.render();
     }
