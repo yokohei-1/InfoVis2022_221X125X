@@ -21,7 +21,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
             margin: { top: 10, right: 10, bottom: 50, left: 50 },
             xlabel: 'TV利用時間 [分]',
             ylabel: 'ネット利用時間 [分]',
-            //cscale: color_scale
+            cscale: color_scale
         }, input_data);
         scatter_plot.update();
 
@@ -31,7 +31,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
             height: 256,
             margin: { top: 10, right: 10, bottom: 50, left: 50 },
             xlabel: 'Species',
-            //cscale: color_scale
+            cscale: color_scale
         }, input_data);
         bar_chart.update();
     })
