@@ -26,61 +26,83 @@ class BarChart {
         self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
         self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-        self.xscale = d3.scaleBand()
-            .range([0, self.inner_width])
-            .paddingInner(0.2)
-            .paddingOuter(0.1);
+        self.xscale_net = d3.scaleLinear()
+            .range([115, self.inner_width]);
 
-        self.yscale = d3.scaleLinear()
-            .range([self.inner_height, 0]);
+        self.yscale_net = d3.scaleBand()
+            .domain(self.data.map(d => d.year).reverse())
+            .range([0, self.inner_height]);
 
-        self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(['setosa', 'versicolor', 'virginica'])
-            .tickSizeOuter(0);
+        self.xscale_TV = d3.scaleLinear()
+            .range([self.inner_width - 113, 0]);
 
-        self.yaxis = d3.axisLeft(self.yscale)
+        self.yscale_TV = d3.scaleBand()
+            .range([0, self.inner_height]);
+
+        self.xaxis_net = d3.axisBottom(self.xscale_net)
             .ticks(5)
-            .tickSizeOuter(0);
+            .tickSize(5)
+            .tickPadding(5);
 
-        self.xaxis_group = self.chart.append('g')
+        self.xaxis_group_net = self.chart.append('g')
             .attr('transform', `translate(0, ${self.inner_height})`);
 
-        self.yaxis_group = self.chart.append('g');
+        self.yaxis_net = d3.axisLeft(self.yscale_net)
+            .ticks(5)
+            .tickSize(0);
+
+        self.yaxis_group_net = self.chart.append('g')
+            .attr('transform', `translate(115, 0)`);
 
         const xlabel_space = 40;
         self.svg.append('text')
             .style('font-size', '12px')
-            .attr('x', self.config.width / 2)
+            .attr('x', self.config.margin.left + self.inner_width / 2)
             .attr('y', self.inner_height + self.config.margin.top + xlabel_space)
+            .attr('text-anchor', 'middle')
             .text(self.config.xlabel);
 
-        const ylabel_space = 50;
+        const ylabel_space = 25;
         self.svg.append('text')
             .style('font-size', '12px')
             .attr('transform', `rotate(-90)`)
             .attr('y', self.config.margin.left - ylabel_space)
-            .attr('x', -(self.config.height / 2))
+            .attr('x', -self.config.margin.top - self.inner_height / 2)
             .attr('text-anchor', 'middle')
             .attr('dy', '1em')
-            .text(self.config.ylabel);
+            .text(self.config.ylabel)
+            .attr('transform', `translate(255, -20)`);
+
+        self.xaxis_TV = d3.axisBottom(self.xscale_TV)
+            .ticks(5)
+            .tickSize(5)
+            .tickPadding(5);
+
+        self.xaxis_group_TV = self.chart.append('g')
+            .attr('transform', `translate(0, ${self.inner_height})`);
+
+        self.yaxis_TV = d3.axisRight(self.yscale_TV)
+            .ticks(5)
+            .tickSize(0);
+
+        self.yaxis_group_TV = self.chart.append('g')
+            .attr('transform', `translate(83, 0)`);
+
     }
 
     update() {
         let self = this;
 
-        const data_map = d3.rollup(self.data, v => v.length, d => d.species);
-        self.aggregated_data = Array.from(data_map, ([key, count]) => ({ key, count }));
+        self.yvalue = d => d.year;
+        self.xvalue1 = d => d.net_percent;
+        self.xvalue2 = d => d.TV_percent;
+        self.year = d => d.year;
 
-        self.cvalue = d => d.key;
-        self.xvalue = d => d.key;
-        self.yvalue = d => d.count;
+        self.xscale_net.domain([50, 100]);
 
-        const items = self.aggregated_data.map(self.xvalue);
-        self.xscale.domain(items);
+        self.xscale_TV.domain([50, 100]);
 
-        const ymin = 0;
-        const ymax = d3.max(self.aggregated_data, self.yvalue);
-        self.yscale.domain([ymin, ymax]);
+        self.xaxis_net.tickSizeOuter(0);
 
         self.render();
     }
@@ -88,31 +110,37 @@ class BarChart {
     render() {
         let self = this;
 
-        self.chart.selectAll(".bar")
-            .data(self.aggregated_data)
-            .join("rect")
-            .attr("class", "bar")
-            .attr("x", d => self.xscale(self.xvalue(d)))
-            .attr("y", d => self.yscale(self.yvalue(d)))
-            .attr("width", self.xscale.bandwidth())
-            .attr("height", d => self.inner_height - self.yscale(self.yvalue(d)))
-            .attr("fill", d => self.config.cscale(self.cvalue(d)))
-            .on('click', function (ev, d) {
-                const is_active = filter.includes(d.key);
-                if (is_active) {
-                    filter = filter.filter(f => f !== d.key);
-                }
-                else {
-                    filter.push(d.key);
-                }
-                Filter();
-                d3.select(this).classed('active', !is_active);
-            });
+        self.xaxis_group_net
+            .call(self.xaxis_net);
 
-        self.xaxis_group
-            .call(self.xaxis);
+        self.yaxis_group_net
+            .call(self.yaxis_net);
 
-        self.yaxis_group
-            .call(self.yaxis);
+        self.xaxis_group_TV
+            .call(self.xaxis_TV);
+
+        self.yaxis_group_TV
+            .call(self.yaxis_TV);
+
+        self.chart.selectAll("svg")
+            .data(self.data)
+            .enter()
+            .append("rect")
+            .attr("x", 115)
+            .attr("y", d => self.yscale_net(d.year) + 10)
+            .attr('fill', 'blue')
+            .attr("width", d => self.xscale_net(d.net_percent) - 120)
+            .attr("height", self.yscale_net.bandwidth() / 2);
+
+        self.chart.selectAll("svg")
+            .data(self.data)
+            .enter()
+            .append("rect")
+            .attr("x", d => self.xscale_TV(d.TV_percent))
+            .attr("y", d => self.yscale_net(d.year) + 10)
+            .attr('fill', 'red')
+            .attr("width", function (d) { return self.inner_width - 113 - self.xscale_TV(d.TV_percent) })
+            .attr("height", self.yscale_TV.bandwidth() / 10);
+
     }
 }
