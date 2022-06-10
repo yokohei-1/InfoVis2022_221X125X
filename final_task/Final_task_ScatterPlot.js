@@ -26,7 +26,7 @@ class ScatterPlot {
             .attr('width', self.config.width)
             .attr('height', self.config.height);
 
-        self.area = d3.area()
+        self.line = d3.line()
             .x(d => d.year)
             .y(d => d.net_use);
 
@@ -111,8 +111,9 @@ class ScatterPlot {
         self.yaxis_group
             .call(self.yaxis);
 
-        self.svg.append('line')
-            .attr('d', self.area(self.data))
-            .attr('stroke', 'black');
+        self.svg.append('path')
+            .attr('d', self.line(self.data))
+            .attr('stroke', 'black')
+            .attr('fill', 'none');
     }
 }
