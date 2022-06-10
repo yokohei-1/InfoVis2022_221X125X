@@ -11,10 +11,11 @@ class ScatterPlot {
             cscale: config.cscale
         }
         this.data = data.slice(0, 5);
-        this.data2 = data.slice(5, 9);
-        this.data3 = data.slice(10, 14);
-        this.data4 = data.slice(15, 19);
-        this.data5 = data.slice(20, 24);
+        this.data2 = data.slice(5, 10);
+        this.data3 = data.slice(10, 15);
+        this.data4 = data.slice(15, 20);
+        this.data5 = data.slice(20, 25);
+        this.data4 = data.slice(25, 30);
         this.init();
     }
 
@@ -26,7 +27,7 @@ class ScatterPlot {
             .attr('height', self.config.height);
 
         self.area = d3.area()
-            .x(d => d.year.replace(/[^0-9]/g, ''))
+            .x(d => d.year)
             .y(d => d.net_use);
 
         self.chart = self.svg.append('g')
@@ -79,7 +80,7 @@ class ScatterPlot {
         let self = this;
 
         self.cvalue = d => d.age;
-        self.xvalue = d => d.year.replace(/[^0-9]/g, '');
+        self.xvalue = d => d.year;
         self.yvalue1 = d => d.net_use;
         self.yvalue2 = d => d.TV_use;
         self.year = d => d.year;
@@ -97,12 +98,6 @@ class ScatterPlot {
 
     render() {
         let self = this;
-
-        const circle_color = 'steelblue';
-        const circle_radius = 3;
-        self.svg.append('path')
-            .attr('d', self.area(self.data))
-            .attr('stroke', 'black');
 
         /*circles
             .attr("r", circle_radius)
@@ -132,5 +127,9 @@ class ScatterPlot {
 
         self.yaxis_group
             .call(self.yaxis);
+
+        self.svg.append('path')
+            .attr('d', self.area(self.data))
+            .attr('stroke', 'black');
     }
 }
