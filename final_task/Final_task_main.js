@@ -5,14 +5,34 @@ let filter = [];
 
 d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_data.csv")
     .then(data => {
-        input_data = data;
-        input_data.forEach(d => {
+        input_data_new = data;
+        input_data_new.forEach(d => {
             d.x = +d.x;
             d.y = +d.y;
         });
 
         const color_scale = d3.scaleOrdinal(d3.schemeCategory10);
         color_scale.domain(['全年代', '10代', '20代', '30代', '40代', '50代', '60代']);
+
+        input_data = input_data_new.slice(0, 5);
+
+        inputSlideBarElement.addEventListener('change', function () {
+            if (inputSlideBarElement.value = 0) {
+                input_data = input_data_new.slice(0, 5);
+            } else if (inputSlideBarElement.value = 10) {
+                input_data = input_data_new.slice(5, 10);
+            } else if (inputSlideBarElement.value = 20) {
+                input_data = input_data_new.slice(10, 15);
+            } else if (inputSlideBarElement.value = 30) {
+                input_data = input_data_new.slice(15, 20);
+            } else if (inputSlideBarElement.value = 40) {
+                input_data = input_data_new.slice(20, 25);
+            } else if (inputSlideBarElement.value = 50) {
+                input_data = input_data_new.slice(25, 30);
+            } else if (inputSlideBarElement.value = 60) {
+                input_data = input_data_new.slice(30, 35);
+            }
+        });
 
         scatter_plot = new ScatterPlot({
             parent: '#drawing_region_scatterplot',

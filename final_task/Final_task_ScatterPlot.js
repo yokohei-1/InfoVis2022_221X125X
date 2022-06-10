@@ -10,13 +10,11 @@ class ScatterPlot {
             ylabel: config.ylabel || '',
             cscale: config.cscale
         }
-        this.data = data.slice(0, 5);
-        this.data2 = data.slice(5, 10);
-        this.data3 = data.slice(10, 15);
-        this.data4 = data.slice(15, 20);
-        this.data5 = data.slice(20, 25);
-        this.data4 = data.slice(25, 30);
+        const inputSlideBarElement = document.getElementById('inputSlideBar');
+
+        this.data = data;
         this.init();
+
     }
 
     init() {
@@ -25,10 +23,6 @@ class ScatterPlot {
         self.svg = d3.select(self.config.parent)
             .attr('width', self.config.width)
             .attr('height', self.config.height);
-
-        self.line = d3.line()
-            .x(d => d.year)
-            .y(d => d.net_use);
 
         self.chart = self.svg.append('g')
             .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
@@ -41,6 +35,14 @@ class ScatterPlot {
 
         self.yscale = d3.scaleLinear()
             .range([self.inner_height, 0]);
+
+        self.line_net = d3.line()
+            .x(d => self.xscale(d.year))
+            .y(d => self.yscale(d.net_use));
+
+        self.line_TV = d3.line()
+            .x(d => self.xscale(d.year))
+            .y(d => self.yscale(d.TV_use));
 
         self.xaxis = d3.axisBottom(self.xscale)
             .ticks(3)
@@ -79,7 +81,6 @@ class ScatterPlot {
     update() {
         let self = this;
 
-        self.cvalue = d => d.age;
         self.xvalue = d => d.year;
         self.yvalue1 = d => d.net_use;
         self.yvalue2 = d => d.TV_use;
@@ -97,7 +98,7 @@ class ScatterPlot {
 
         const ymax = Math.max(ymax1, ymax2);
         const ymin = Math.min(ymin1, ymin2);
-        self.yscale.domain([ymin, ymax]);
+        self.yscale.domain([ymin, ymax + 40]);
 
         self.render();
     }
@@ -112,8 +113,15 @@ class ScatterPlot {
             .call(self.yaxis);
 
         self.svg.append('path')
-            .attr('d', self.line(self.data))
-            .attr('stroke', 'black')
-            .attr('fill', 'none');
+            .attr('d', self.line_net(self.data))
+            .attr('stroke', 'blue')
+            .attr('fill', 'none')
+            .attr('transform', `translate(50, 0)`);
+
+        self.svg.append('path')
+            .attr('d', self.line_TV(self.data))
+            .attr('stroke', 'red')
+            .attr('fill', 'none')
+            .attr('transform', `translate(50, 0)`);
     }
 }
