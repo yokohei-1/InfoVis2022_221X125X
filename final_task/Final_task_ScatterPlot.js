@@ -10,7 +10,11 @@ class ScatterPlot {
             ylabel: config.ylabel || '',
             cscale: config.cscale
         }
-        this.data = data;
+        this.data = data.slice(0, 5);
+        this.data2 = data.slice(5, 9);
+        this.data3 = data.slice(10, 14);
+        this.data4 = data.slice(15, 19);
+        this.data5 = data.slice(20, 24);
         this.init();
     }
 
@@ -20,6 +24,10 @@ class ScatterPlot {
         self.svg = d3.select(self.config.parent)
             .attr('width', self.config.width)
             .attr('height', self.config.height);
+
+        self.area = d3.area()
+            .x(d => d.year.replace(/[^0-9]/g, ''))
+            .y(d => d.net_use);
 
         self.chart = self.svg.append('g')
             .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
@@ -71,16 +79,17 @@ class ScatterPlot {
         let self = this;
 
         self.cvalue = d => d.age;
-        self.xvalue = d => d.TV_use;
-        self.yvalue = d => d.net_use;
+        self.xvalue = d => d.year.replace(/[^0-9]/g, '');
+        self.yvalue1 = d => d.net_use;
+        self.yvalue2 = d => d.TV_use;
         self.year = d => d.year;
 
         const xmin = d3.min(self.data, self.xvalue);
         const xmax = d3.max(self.data, self.xvalue);
         self.xscale.domain([xmin, xmax]);
 
-        const ymin = d3.min(self.data, self.yvalue);
-        const ymax = d3.max(self.data, self.yvalue);
+        const ymin = d3.min(self.data, self.yvalue1);
+        const ymax = d3.max(self.data, self.yvalue1);
         self.yscale.domain([ymax, ymin]);
 
         self.render();
@@ -89,34 +98,34 @@ class ScatterPlot {
     render() {
         let self = this;
 
-        let circles = self.chart.selectAll("circle")
-            .data(self.data)
-            .join('circle');
-
         const circle_color = 'steelblue';
         const circle_radius = 3;
-        circles
+        self.svg.append('path')
+            .attr('d', self.area(self.data))
+            .attr('stroke', 'black');
+
+        /*circles
             .attr("r", circle_radius)
             .attr("cx", d => self.xscale(self.xvalue(d)))
-            .attr("cy", d => self.yscale(self.yvalue(d)))
-            .attr("fill", d => self.config.cscale(self.cvalue(d)));
+            .attr("cy", d => self.yscale(self.yvalue2(d)))
+            .attr("fill", d => self.config.cscale(self.cvalue(d)));*/
 
-        circles
-            .on('mouseover', (e, d) => {
-                d3.select('#tooltip')
-                    .style('opacity', 1)
-                    .html(`<div class="tooltip-label">${d.age}</div>(${d.TV_use}, ${d.TV_use})`);
-            })
-            .on('mousemove', (e) => {
-                const padding = 10;
-                d3.select('#tooltip')
-                    .style('left', (e.pageX + padding) + 'px')
-                    .style('top', (e.pageY + padding) + 'px');
-            })
-            .on('mouseleave', () => {
-                d3.select('#tooltip')
-                    .style('opacity', 0);
-            });
+        /* circles
+             .on('mouseover', (e, d) => {
+                 d3.select('#tooltip')
+                     .style('opacity', 1)
+                     .html(`<div class="tooltip-label">${d.age}</div>(${d.TV_use}, ${d.TV_use})`);
+             })
+             .on('mousemove', (e) => {
+                 const padding = 10;
+                 d3.select('#tooltip')
+                     .style('left', (e.pageX + padding) + 'px')
+                     .style('top', (e.pageY + padding) + 'px');
+             })
+             .on('mouseleave', () => {
+                 d3.select('#tooltip')
+                     .style('opacity', 0);
+             });*/
 
         self.xaxis_group
             .call(self.xaxis);
