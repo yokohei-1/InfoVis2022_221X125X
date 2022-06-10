@@ -105,36 +105,13 @@ class ScatterPlot {
     render() {
         let self = this;
 
-        /*circles
-            .attr("r", circle_radius)
-            .attr("cx", d => self.xscale(self.xvalue(d)))
-            .attr("cy", d => self.yscale(self.yvalue2(d)))
-            .attr("fill", d => self.config.cscale(self.cvalue(d)));*/
-
-        /* circles
-             .on('mouseover', (e, d) => {
-                 d3.select('#tooltip')
-                     .style('opacity', 1)
-                     .html(`<div class="tooltip-label">${d.age}</div>(${d.TV_use}, ${d.TV_use})`);
-             })
-             .on('mousemove', (e) => {
-                 const padding = 10;
-                 d3.select('#tooltip')
-                     .style('left', (e.pageX + padding) + 'px')
-                     .style('top', (e.pageY + padding) + 'px');
-             })
-             .on('mouseleave', () => {
-                 d3.select('#tooltip')
-                     .style('opacity', 0);
-             });*/
-
         self.xaxis_group
             .call(self.xaxis);
 
         self.yaxis_group
             .call(self.yaxis);
 
-        self.svg.append('path')
+        self.svg.append('line')
             .attr('d', self.area(self.data))
             .attr('stroke', 'black');
     }
