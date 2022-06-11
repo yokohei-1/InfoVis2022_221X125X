@@ -34,7 +34,7 @@ d3.csv("https://yokohei-1.github.io/InfoVis2022_221X125X//final_task/Final_task_
             width: 256,
             height: 256,
             margin: { top: 10, right: 10, bottom: 50, left: 50 },
-            xlabel: '%',
+            xlabel: '行為率(%)',
             ylabel: '年',
         }, input_data);
         bar_chart.update();
