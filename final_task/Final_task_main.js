@@ -103,7 +103,7 @@ inputSlideBarElement.addEventListener('change', function () {
         width: 256,
         height: 256,
         margin: { top: 10, right: 10, bottom: 50, left: 50 },
-        xlabel: '%',
+        xlabel: '行為者率(%)',
         ylabel: '年',
     }, input_data);
     bar_chart.update();
